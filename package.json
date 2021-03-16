@@ -1,0 +1,36 @@
+{
+    "name": "vheel",
+    "version": "1.0.0",
+    "description": "Explain how to create a vue-similar framework",
+    "main": "index.js",
+    "scripts": {
+        "dev": "webpack serve --config ./build/webpack.dev.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yangjiang3973/vheel.git"
+    },
+    "author": "Yang Jiang",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/yangjiang3973/vheel/issues"
+    },
+    "homepage": "https://github.com/yangjiang3973/vheel#readme",
+    "devDependencies": {
+        "@babel/core": "^7.13.10",
+        "@babel/preset-env": "^7.13.10",
+        "@types/jest": "^26.0.20",
+        "@vue/babel-preset-jsx": "^1.2.4",
+        "babel-loader": "^8.2.2",
+        "clean-webpack-plugin": "^3.0.0",
+        "html-webpack-plugin": "^5.3.1",
+        "jest": "^26.6.3",
+        "ts-jest": "^26.5.3",
+        "ts-loader": "^8.0.18",
+        "typescript": "^4.2.3",
+        "webpack": "^5.25.1",
+        "webpack-cli": "^4.5.0",
+        "webpack-dev-server": "^3.11.2",
+        "webpack-merge": "^5.7.3"
+    }
+}
