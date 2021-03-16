@@ -1,0 +1,17 @@
+{
+    "presets": ["@babel/env", "@vue/babel-preset-jsx"],
+    "plugins": ["@babel/plugin-proposal-class-properties"]
+}
+
+// NOTE: Should switch to @vue/babel-plugin-jsx when the new release publishes, which has the pragma feature.
+// {
+//     "presets": ["@babel/env"],
+//     "plugins": [
+//         [
+//             "@vue/babel-plugin-jsx",
+//             {
+//                 "pragma": "[The name of function I want to use]", // defaults to createVNode
+//             }
+//         ]
+//     ]
+// }

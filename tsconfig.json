@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "sourceMap": true,
+        "target": "esnext",
+        "module": "esnext",
+        "esModuleInterop": true,
+        "removeComments": false,
+        // https://www.typescriptlang.org/docs/handbook/jsx.html
+        "jsx": "preserve" // Setting the jsx option to "preserve" means that TypeScript should not process the JSX.
+    },
+    "include": [
+        "packages/*/src",
+        "packages/*/__tests__",
+        "packages/global.d.ts"
+    ]
+}
