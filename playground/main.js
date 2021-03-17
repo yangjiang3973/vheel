@@ -1,14 +1,16 @@
-import { createApp, h } from '../packages/runtime-dom/src/index';
-
+import { createApp, createVNode as h } from '../packages/runtime-dom/src/index';
 const app = createApp({
     data() {
         return {
-            title: 'hello',
+            title: 'Hello world!',
         };
     },
     render() {
-        return <span>{this.title}</span>;
+        // <div>
+        //     <span>“Hello world!”</span>
+        // </div>
+        // equivalence vnode:
+        return h('div', null, [h('span', null, [this.title])]);
     },
 });
-
 app.mount('#app');
