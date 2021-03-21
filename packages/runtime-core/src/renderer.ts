@@ -1,3 +1,4 @@
+import { effect } from '../../reactivity/src/index';
 import { createComponentInstance, setupComponent } from './component';
 import { Text, createVNode } from './vnode';
 import { isString, isObject } from '../../shared/src/index';
@@ -28,8 +29,13 @@ function processText(n1, n2, container) {
 
 function processElement(n1, n2, container) {
     if (!n1) mountElement(n2, container);
-    // TODO:
-    // else patchElement(n1,n2,container)
+    else patchElement(n1, n2, container);
+}
+
+function patchElement(n1, n2, container) {
+    // remove old tree, then insert the new one
+    container.removeChild(n1.el);
+    mountElement(n2, container);
 }
 
 function mountElement(vnode, container) {
@@ -70,8 +76,20 @@ function mountComponent(compVNode, container) {
     setupRenderEffect(instance, compVNode, container);
 }
 
+// TODO:
 function setupRenderEffect(instance, initialVNode, container) {
-    const { proxy, render } = instance;
-    const subTree = render.call(proxy);
-    patch(null, subTree, container);
+    instance.update = effect(function componentEffect() {
+        const { proxy, render } = instance;
+        let subTree, preTree, nextTree;
+        if (!instance.isMounted) {
+            subTree = instance.subTree = render.call(proxy);
+            patch(null, subTree, container);
+            instance.isMounted = true;
+        } else {
+            nextTree = render.call(proxy);
+            preTree = instance.subTree;
+            instance.subTree = nextTree;
+            patch(preTree, nextTree, container);
+        }
+    });
 }

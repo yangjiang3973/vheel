@@ -1,8 +1,13 @@
+import { reactive } from '../../reactivity/src/index';
 import { hasOwn, isFunction } from '../../shared/src/index';
 
 const PublicInstanceProxyHandlers = {
     get: function (target, key) {
-        if (hasOwn(target.data, key)) return Reflect.get(target.data, key);
+        if (hasOwn(target.data, key)) return target.data[key];
+    },
+    set: function (target, key, value, receiver) {
+        // return Reflect.set(target.data, key, value, receiver);
+        return (target.data[key] = value);
     },
 };
 
@@ -12,7 +17,8 @@ function finishComponentSetup(instance) {
     if (isFunction(Component.data)) {
         const dataFn = Component.data;
         const data = dataFn.call(instance.proxy);
-        instance.data = data;
+
+        instance.data = reactive(data);
     }
 }
 
