@@ -6,7 +6,6 @@ const PublicInstanceProxyHandlers = {
         if (hasOwn(target.data, key)) return target.data[key];
     },
     set: function (target, key, value, receiver) {
-        // return Reflect.set(target.data, key, value, receiver);
         return (target.data[key] = value);
     },
 };

@@ -10,7 +10,7 @@ const app = createApp({
             this.counter++;
         }, 1000);
         // <div>
-        //     <span>“Hello world!”</span>
+        //     <span> Counter: {this.counter} </span>
         // </div>
         // equivalence vnode:
         return h('div', null, [h('span', null, ['Counter: ' + this.counter])]);
