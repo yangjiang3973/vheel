@@ -74,6 +74,7 @@ function createReactiveEffect<T = any>(
 }
 
 export function track(target: object, type: TrackOpTypes, key: unknown) {
+    if (activeEffect === undefined) return;
     let depsMap = targetMap.get(target);
     if (!depsMap) {
         depsMap = new Map();
