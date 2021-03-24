@@ -1,4 +1,10 @@
-import { reactive, Target, ReactiveFlags, reactiveMap } from './reactive';
+import {
+    reactive,
+    Target,
+    ReactiveFlags,
+    reactiveMap,
+    toRaw,
+} from './reactive';
 import { track, trigger } from './effect';
 import { TrackOpTypes, TriggerOpTypes } from './operations';
 import { isObject, hasOwn, hasChanged } from '../../shared/src/index';
@@ -13,6 +19,18 @@ export const mutableHandlers: ProxyHandler<object> = {
 };
 
 function get(target: Target, key: string | symbol, receiver: object) {
+    //*
+    if (key === ReactiveFlags.IS_REACTIVE) {
+        //   return !isReadonly
+        return true;
+    } else if (
+        key === ReactiveFlags.RAW &&
+        receiver === reactiveMap.get(target)
+        //   receiver === (isReadonly ? readonlyMap : reactiveMap).get(target)
+    ) {
+        return target;
+    }
+
     const res = Reflect.get(target, key, receiver);
 
     track(target, TrackOpTypes.GET, key);
@@ -36,10 +54,13 @@ function set(
 
     const result = Reflect.set(target, key, value, receiver);
 
-    if (!hadKey) {
-        trigger(target, TriggerOpTypes.ADD, key, value);
-    } else if (hasChanged(value, oldValue)) {
-        trigger(target, TriggerOpTypes.SET, key, value, oldValue);
+    //*
+    if (target === toRaw(receiver)) {
+        if (!hadKey) {
+            trigger(target, TriggerOpTypes.ADD, key, value);
+        } else if (hasChanged(value, oldValue)) {
+            trigger(target, TriggerOpTypes.SET, key, value, oldValue);
+        }
     }
 
     return result;

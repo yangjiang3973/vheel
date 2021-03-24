@@ -18,3 +18,13 @@ export const hasOwn = function (obj, key) {
 
 export const hasChanged = (value, oldValue) =>
     value !== oldValue && (value === value || oldValue === oldValue);
+
+export const toRawType = (value) => {
+    // extract "RawType" from strings like "[object RawType]"
+    return toTypeString(value).slice(8, -1);
+};
+
+export const toTypeString = (value: unknown): string =>
+    objectToString.call(value);
+
+export const objectToString = Object.prototype.toString;
