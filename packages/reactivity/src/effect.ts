@@ -1,4 +1,5 @@
 import { TrackOpTypes, TriggerOpTypes } from './operations';
+import { isIntegerKey } from '../../shared/src/index';
 
 const targetMap = new WeakMap<any, KeyToDepMap>();
 type KeyToDepMap = Map<any, Dep>;
@@ -31,15 +32,34 @@ export interface DebuggerEventExtraInfo {
     oldTarget?: Map<any, any> | Set<any>;
 }
 
+export const ITERATE_KEY = Symbol(__DEV__ ? 'iterate' : '');
+
 let activeEffect: ReactiveEffect | undefined;
 const effectStack: ReactiveEffect[] = [];
 
+let shouldTrack = true;
+const trackStack: boolean[] = [];
+
+export function pauseTracking() {
+    trackStack.push(shouldTrack);
+    shouldTrack = false;
+}
+
+export function enableTracking() {
+    trackStack.push(shouldTrack);
+    shouldTrack = true;
+}
+
+export function resetTracking() {
+    const last = trackStack.pop();
+    shouldTrack = last === undefined ? true : last;
+}
+
 export function effect<T = any>(
     fn: () => T,
-    options: ReactiveEffectOptions = {} //* vue use EMPTY_OBJ
+    options: ReactiveEffectOptions = {}
 ): ReactiveEffect<T> {
     const effect = createReactiveEffect(fn, options);
-    //* run effect immediately
     if (!options.lazy) {
         effect();
     }
@@ -109,6 +129,7 @@ export function trigger(
     oldTarget?: Map<unknown, unknown> | Set<unknown>
 ) {
     const depsMap = targetMap.get(target);
+
     if (!depsMap) {
         // never been tracked
         return;
@@ -129,6 +150,11 @@ export function trigger(
         addEffects(dep);
     }
 
+    if (type === TriggerOpTypes.ADD) {
+        if (isIntegerKey(key)) {
+            addEffects(depsMap.get('length'));
+        }
+    }
     // run
     effectsToExe.forEach((effect) => {
         if (__DEV__ && effect.options.onTrigger) {
