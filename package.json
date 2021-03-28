@@ -4,6 +4,7 @@
     "description": "Explain how to create a vue-similar framework",
     "main": "index.js",
     "scripts": {
+        "jest": "jest packages/reactivity/ --config=jest.config.js --watch",
         "dev": "webpack serve --config ./build/webpack.dev.js"
     },
     "repository": {

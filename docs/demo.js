@@ -1,9 +1,4 @@
-let target = {
-    msg1: 'hello',
-    msg2: 'everyone',
-};
-
-// let array = [1, 2, 3];
+let array = [1, 2, 3];
 
 const handler = {
     // intercept `get` method
@@ -12,17 +7,20 @@ const handler = {
         return Reflect.get(...arguments);
     },
     // intercept `set` method
-    // set: function (target, prop, value, receiver) {
-    //     console.log('the prop to set is: ', prop);
-    //     return Reflect.set(target, prop, value, receiver);
-    // },
+    set: function (target, prop, value, receiver) {
+        console.log('the prop to set is: ', prop);
+        return Reflect.set(target, prop, value, receiver);
+    },
 };
-const proxy = new Proxy(target, handler);
+const proxy = new Proxy(array, handler);
 
 // use proxy to access data
-console.log(proxy.msg1);
-proxy.msg1 = 'aaa';
-console.log(proxy.msg1);
+proxy.shift();
 
-// TODO: Reflect.set(target.data, key, value, receiver);
-// Reflect chain
+/*
+terminal:
+the prop to get is:  push
+the prop to get is:  length
+the prop to set is:  3
+the prop to set is:  length
+*/
